@@ -24,7 +24,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5">
+        app:layout_constraintVertical_bias="1">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/titleLayout"
@@ -55,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
+
             android:hint="Kwota"
             app:boxStrokeColor="@color/green"
             app:errorEnabled="true"
@@ -77,6 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
+            android:layout_marginBottom="14dp"
             android:hint="Opis"
             app:boxStrokeColor="@color/green"
             app:errorEnabled="false"
@@ -92,13 +94,38 @@
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <EditText
+            android:id="@+id/dateEditText"
+            android:drawableStart="@drawable/date_selector"
+            android:drawablePadding="22dp"
+            android:hint="Data"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="showDatePickerDialog"
+            android:focusable="false"
+            android:inputType="none" />
+
+        <Spinner
+            android:id="@+id/category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:entries="@array/spinner_items"
+            android:textSize="34sp"
+            android:spinnerMode="dropdown" />
+
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="300dp"
             android:layout_height="250dp"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="32dp"
-            android:src="@drawable/ic_photo"/>
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_photo" />
 
         <Button
             android:id="@+id/addTransButton"

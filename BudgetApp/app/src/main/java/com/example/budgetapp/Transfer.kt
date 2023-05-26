@@ -10,5 +10,7 @@ data class Transfer(
     val label: String,
     val amount: Double,
     val img_uri: String?,
-    val description: String) : Serializable {
+    val description: String,
+    val category: String,
+    val date: String): Serializable {
 }

@@ -15,7 +15,6 @@
         android:background="@drawable/close_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-
         android:backgroundTintMode="multiply" />
 
     <LinearLayout
@@ -26,13 +25,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.64">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/titleLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:hint="Tytuł"
@@ -47,14 +47,14 @@
                 android:layout_height="match_parent"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textSize="34sp" />
+                android:textSize="26sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/amountLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:hint="Kwota"
@@ -71,7 +71,7 @@
                 android:drawablePadding="12dp"
                 android:inputType="numberDecimal|numberSigned"
                 android:maxLines="1"
-                android:textSize="34sp" />
+                android:textSize="26sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -93,13 +93,42 @@
                 android:layout_height="match_parent"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textSize="34sp" />
+                android:textSize="26sp" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <EditText
+            android:id="@+id/dateEditText"
+            android:drawableStart="@drawable/date_selector"
+            android:drawablePadding="22dp"
+            android:hint="Data"
+            android:textSize="24dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="showDatePickerDialog"
+            android:focusable="false"
+            android:inputType="none" />
+
+        <Spinner
+            android:id="@+id/category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="10dp"
+            android:paddingStart="8dp"
+            android:padding="4dp"
+            android:entries="@array/spinner_items"
+            android:spinnerMode="dropdown"
+            android:textSize="34sp"/>
+
         <ImageView
             android:id="@+id/photoView"
             android:layout_width="300dp"
             android:layout_height="250dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/ic_photo"/>
         <Button
@@ -107,7 +136,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Wstaw zdjęcie paragonu"
-            android:layout_margin="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:padding="10dp"/>
     </LinearLayout>
 
@@ -116,15 +146,17 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:backgroundTint="@color/green"
         android:padding="10dp"
         android:text="Edytuj"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
+        app:layout_constraintHorizontal_bias="0.67"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.83" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

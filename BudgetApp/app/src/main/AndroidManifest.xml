@@ -43,16 +43,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-<!--&lt;!&ndash;dodane&ndash;&gt;-->
-<!--        <provider-->
-<!--            android:authorities="com.example.budgetapp.fileProvider"-->
-<!--            android:name="androidx.core.content.FileProvider"-->
-<!--            android:exported="false"-->
-<!--            android:grantUriPermissions="true">-->
-<!--            <meta-data-->
-<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
-<!--                android:resource="@xml/file_paths"/>-->
-<!--        </provider>-->
+
         
     </application>
 

@@ -16,6 +16,7 @@ class TransferAdapter(private var transfers: List<Transfer>) :
     class TransferHolder(view: View) : RecyclerView.ViewHolder(view){
         val title : TextView = view.findViewById(R.id.title)
         val amount : TextView = view.findViewById(R.id.amount)
+        val cat : TextView = view.findViewById(R.id.cat)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransferHolder {
@@ -36,6 +37,7 @@ class TransferAdapter(private var transfers: List<Transfer>) :
             holder.amount.setTextColor(ContextCompat.getColor(context,R.color.red))
         }
         holder.title.text = transfer.label
+        holder.cat.text = transfer.category
 
         holder.itemView.setOnClickListener {
             val intent = Intent(context, DetailsActivity::class.java)
