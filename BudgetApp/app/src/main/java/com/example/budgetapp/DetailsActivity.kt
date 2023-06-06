@@ -10,10 +10,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.core.net.toUri
 import androidx.core.widget.addTextChangedListener
 import androidx.room.Room
@@ -22,12 +19,14 @@ import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.activity_details.amountInput
 import kotlinx.android.synthetic.main.activity_details.amountLayout
 import kotlinx.android.synthetic.main.activity_details.closeButton
-import kotlinx.android.synthetic.main.activity_details.dateEditText
+import kotlinx.android.synthetic.main.activity_details.dateInput
+import kotlinx.android.synthetic.main.activity_details.dateLayout
 import kotlinx.android.synthetic.main.activity_details.descInput
 import kotlinx.android.synthetic.main.activity_details.titleInput
 import kotlinx.android.synthetic.main.activity_details.titleLayout
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
 
 class DetailsActivity : AppCompatActivity() {
@@ -48,6 +47,7 @@ class DetailsActivity : AppCompatActivity() {
         titleInput.setText(transfer.label)
         amountInput.setText(transfer.amount.toString())
         descInput.setText(transfer.description)
+        dateInput.setText(transfer.date)
         photoView.setImageURI(transfer.img_uri?.toUri())
 
         spinner = findViewById(R.id.category)
@@ -90,6 +90,9 @@ class DetailsActivity : AppCompatActivity() {
         descInput.addTextChangedListener {
             updateTransButton.visibility = View.VISIBLE
         }
+        dateInput.addTextChangedListener {
+            updateTransButton.visibility = View.VISIBLE
+        }
 
         addPhoto.setOnClickListener {
             openCamera()
@@ -101,6 +104,7 @@ class DetailsActivity : AppCompatActivity() {
             val title = titleInput.text.toString()
             val amount = amountInput.text.toString().toDoubleOrNull()
             val description = descInput.text.toString()
+            val date = dateInput.text.toString()
             val url = image_uri.toString()
 
             if(title.isEmpty())
@@ -108,9 +112,15 @@ class DetailsActivity : AppCompatActivity() {
 
             else if(amount == null)
                 amountLayout.error = "Wprowadź poprawną kwotę"
+
+            else if(selectedOption == spinner.getItemAtPosition(0)){
+                val errorView = spinner.selectedView as TextView
+                errorView.error = "Wybierz opcję"
+                errorView.requestFocus()
+            }
             else {
-                transfer = Transfer(transfer.id, title, amount, url, description, selectedOption, selectedDate)
-                update(transfer)
+                val transfer1 = Transfer(transfer.id, title, amount, url, description, selectedOption, date)
+                update(transfer1)
             }
         }
 
@@ -152,9 +162,13 @@ class DetailsActivity : AppCompatActivity() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, selectedYear, selectedMonth, selectedDay ->
-            selectedDate = "${selectedDay}/${selectedMonth + 1}/${selectedYear}"
-            dateEditText.setText(selectedDate)
+        val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            val selDate = Calendar.getInstance()
+            selDate.set(year, month, dayOfMonth)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formattedDate = dateFormat.format(selDate.time)
+            selectedDate = formattedDate
+            dateInput.setText(formattedDate)
         }, year, month, day)
 
         datePickerDialog.show()

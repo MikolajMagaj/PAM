@@ -2,11 +2,14 @@
     <string name="app_name">BudgetApp</string>
     <string-array name="spinner_items">
         <item>Kategoria:</item>
+        <item>Wpływy</item>
         <item>Jedzenie</item>
         <item>Rachunki</item>
-        <item>Wpływy</item>
         <item>Chemia</item>
         <item>Transport</item>
+        <item>Podróże</item>
+        <item>Hobby</item>
+        <item>Sprzęt</item>
         <item>Pozostałe</item>
     </string-array>
     <string-array name="spinner_sort_items">

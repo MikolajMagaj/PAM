@@ -1,11 +1,13 @@
 package com.example.budgetapp
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -24,6 +26,8 @@ import kotlinx.android.synthetic.main.activity_details.titleLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var deleteTransfer: Transfer
@@ -38,8 +42,9 @@ class MainActivity : AppCompatActivity() {
     var selectedOption_cat: String? = null
     var price_from: Double? = null
     var price_to: Double? = null
-    var order_name: String? = null
-    var order: String? = null
+    var selectedDateFrom: String? = null
+    var selectedDateTo: String? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,10 +93,12 @@ class MainActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if(position > 0) {
                     selectedOption_cat = parent?.getItemAtPosition(position).toString()
-                    fetchFiltred(selectedOption_cat, price_from, price_to, order_name, order)
+                    fetchFiltred(selectedOption_cat, price_from, price_to, selectedDateFrom, selectedDateTo)
                 }
-                else
+                else {
                     fetchAll()
+                    selectedOption_cat = null
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -106,41 +113,10 @@ class MainActivity : AppCompatActivity() {
         spinner1.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if(position > 0) {
-                    if(position == 1)
-                    {
-                        order_name = "amount"
-                        order = "DESC"
-                    }
-
-                    if(position == 2)
-                    {
-                        order_name = "amount"
-                        order = "ASC"
-                    }
-                    if(position == 3)
-                    {
-                        order_name = "label"
-                        order = "DESC"
-                    }
-                    if(position == 4)
-                    {
-                        order_name = "label"
-                        order = "ASC"
-                    }
-                    if(position == 5)
-                    {
-                        order_name = "date"
-                        order = "ASC"
-                    }
-                    if(position == 6)
-                    {
-                        order_name = "date"
-                        order = "ASC"
-                    }
-                    fetchFiltred(selectedOption_cat, price_from, price_to, order_name, order)
+                    fetchFiltred2(selectedOption_cat, price_from, price_to, selectedDateFrom, selectedDateTo, position)
                 }
                 else
-                    fetchAll()
+                    fetchFiltred(selectedOption_cat, price_from, price_to, selectedDateFrom, selectedDateTo)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -151,7 +127,7 @@ class MainActivity : AppCompatActivity() {
         etPriceFrom.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 price_from = etPriceFrom.text.toString().toDoubleOrNull()
-                fetchFiltred(selectedOption_cat, price_from, price_to, order_name, order)
+                fetchFiltred(selectedOption_cat, price_from, price_to, selectedDateFrom, selectedDateTo)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -163,7 +139,7 @@ class MainActivity : AppCompatActivity() {
         etPriceTo.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 price_to = etPriceTo.text.toString().toDoubleOrNull()
-                fetchFiltred(selectedOption_cat, price_from, price_to, order_name, order)
+                fetchFiltred(selectedOption_cat, price_from, price_to, selectedDateFrom, selectedDateTo)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -173,13 +149,56 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        etDateFrom.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                fetchFiltred(selectedOption_cat, price_from, price_to, selectedDateFrom, selectedDateTo)
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+        etDateTo.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                fetchFiltred(selectedOption_cat, price_from, price_to, selectedDateFrom, selectedDateTo)
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
 
     }
 
-    private fun fetchFiltred(selectedOption: String?, price_f: Double?, price_t: Double?, order_name: String?, order: String?) {
+    private fun fetchFiltred(selectedOption: String?, price_f: Double?, price_t: Double?, date_f: String?, date_t: String?) {
         GlobalScope.launch {
-            transfers = db.transferDAO().getFiltred(selectedOption, price_f, price_t, order_name, order)
+            transfers = db.transferDAO().getFiltred(selectedOption, price_f, price_t, date_f, date_t)
 
+            runOnUiThread{
+                transferAdapter.setData(transfers)
+            }
+        }
+    }
+    private fun fetchFiltred2(selectedOption: String?, price_f: Double?, price_t: Double?, date_f: String?, date_t: String?, pos: Int) {
+        GlobalScope.launch {
+            if(pos == 1)
+                transfers = db.transferDAO().getFiltred_p_d(selectedOption, price_f, price_t, date_f, date_t)
+            else if(pos == 2)
+                transfers = db.transferDAO().getFiltred_p_a(selectedOption, price_f, price_t, date_f, date_t)
+            else if(pos == 3)
+                transfers = db.transferDAO().getFiltred_l_d(selectedOption, price_f, price_t, date_f, date_t)
+            else if(pos == 4)
+                transfers = db.transferDAO().getFiltred_l_a(selectedOption, price_f, price_t, date_f, date_t)
+            else if(pos == 5)
+                transfers = db.transferDAO().getFiltred_d_d(selectedOption, price_f, price_t, date_f, date_t)
+            else if(pos == 6)
+                transfers = db.transferDAO().getFiltred_d_a(selectedOption, price_f, price_t, date_f, date_t)
+            else
+                transfers = db.transferDAO().getFiltred(selectedOption, price_f, price_t, date_f, date_t)
             runOnUiThread{
                 transferAdapter.setData(transfers)
             }
@@ -244,6 +263,51 @@ class MainActivity : AppCompatActivity() {
                 showError()
             }
         }
+    }
+
+    fun showDatePickerDialogFrom(view: View) {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            val selDate = Calendar.getInstance()
+            selDate.set(year, month, dayOfMonth)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formattedDate = dateFormat.format(selDate.time)
+            selectedDateFrom = formattedDate
+            etDateFrom.setText(formattedDate)
+        }, year, month, day)
+
+        datePickerDialog.setOnCancelListener {
+            selectedDateFrom = null
+            etDateFrom.setText(selectedDateFrom)
+        }
+
+        datePickerDialog.show()
+    }
+    fun showDatePickerDialogTo(view: View) {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            val selDate = Calendar.getInstance()
+            selDate.set(year, month, dayOfMonth)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formattedDate = dateFormat.format(selDate.time)
+            selectedDateTo = formattedDate
+            etDateTo.setText(formattedDate)
+        }, year, month, day)
+
+        datePickerDialog.setOnCancelListener {
+            selectedDateTo = null
+            etDateTo.setText(selectedDateTo)
+        }
+
+        datePickerDialog.show()
     }
 
     override fun onResume() {

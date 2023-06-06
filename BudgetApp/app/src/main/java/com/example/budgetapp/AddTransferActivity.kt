@@ -10,16 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.core.widget.addTextChangedListener
 import androidx.room.Room
 import com.example.budgetapp.databinding.ActivityAddTransferBinding
 import kotlinx.android.synthetic.main.activity_add_transfer.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
 
 class AddTransferActivity : AppCompatActivity(){
@@ -79,6 +77,7 @@ class AddTransferActivity : AppCompatActivity(){
             val title = titleInput.text.toString()
             val amount = amountInput.text.toString().toDoubleOrNull()
             val description = descInput.text.toString()
+            val date = dateInput.text.toString()
             val url = image_uri.toString()
 
             if(title.isEmpty())
@@ -86,6 +85,16 @@ class AddTransferActivity : AppCompatActivity(){
 
             else if(amount == null)
                 amountLayout.error = "Wprowadź poprawną kwotę"
+
+            else if(date.isEmpty())
+                dateLayout.error = "Wprowadź datę"
+
+            else if(selectedOption == spinner.getItemAtPosition(0)){
+                val errorView = spinner.selectedView as TextView
+                errorView.error = "Wybierz opcję"
+                errorView.requestFocus()
+            }
+
             else {
                 val transfer = Transfer(0, title, amount, url, description, selectedOption, selectedDate)
                 insert(transfer)
@@ -149,9 +158,13 @@ class AddTransferActivity : AppCompatActivity(){
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, selectedYear, selectedMonth, selectedDay ->
-            selectedDate = "${selectedDay}/${selectedMonth + 1}/${selectedYear}"
-            dateEditText.setText(selectedDate)
+        val datePickerDialog = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            val selDate = Calendar.getInstance()
+            selDate.set(year, month, dayOfMonth)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formattedDate = dateFormat.format(selDate.time)
+            selectedDate = formattedDate
+            dateInput.setText(formattedDate)
         }, year, month, day)
 
         datePickerDialog.show()

@@ -110,7 +110,7 @@
 
                 <Spinner
                     android:id="@+id/category_pick"
-                    android:layout_width="match_parent"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:entries="@array/spinner_items"
@@ -162,6 +162,40 @@
                             android:inputType="numberDecimal|numberSigned"/>
 
                     </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="12dp">
+                        <EditText
+                            android:id="@+id/etDateFrom"
+                            android:width="140dp"
+                            android:height="40dp"
+                            android:drawableStart="@drawable/date_selector"
+                            android:drawablePadding="10dp"
+                            android:hint="Data od"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:onClick="showDatePickerDialogFrom"
+                            android:focusable="false"
+                            android:inputType="none" />
+
+                        <EditText
+                            android:id="@+id/etDateTo"
+                            android:width="140dp"
+                            android:height="40dp"
+                            android:drawableStart="@drawable/date_selector"
+                            android:drawablePadding="10dp"
+                            android:hint="Data do"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:onClick="showDatePickerDialogTo"
+                            android:focusable="false"
+                            android:inputType="none" />
+
                 </LinearLayout>
 
                 <Spinner
